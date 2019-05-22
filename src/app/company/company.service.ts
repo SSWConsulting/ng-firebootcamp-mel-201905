@@ -21,7 +21,7 @@ export class CompanyService {
     return this.httpClient.get<Company[]>(`${this.API_BASE}/company`)
     .pipe(
       // retry(10),
-      catchError(this.errorHandling),
+      catchError(e => this.errorHandling<Company[]>(e)),
     );
   }
 
@@ -31,7 +31,7 @@ export class CompanyService {
     .pipe(
       // retry(10),
       tap(c => console.log("HttpClient.delete called")),
-      catchError(this.errorHandling),
+      catchError(e => this.errorHandling<Company>(e)),
     );
   }
 
@@ -40,24 +40,24 @@ export class CompanyService {
     return this.httpClient.post<Company>(
       `${this.API_BASE}/company`, company,
       { headers: new HttpHeaders().set('content-type', 'application/json') }
-    ).pipe(catchError(e => this.errorHandling(e)));
+    ).pipe(catchError(e => this.errorHandling<Company>(e)));
   }
 
   getCompany(id: number): Observable<Company> {
     return this.httpClient.get<Company>(`${this.API_BASE}/company/${id}`)
-    .pipe(catchError(e => this.errorHandling(e)));
+    .pipe(catchError(e => this.errorHandling<Company>(e)));
   }
 
   updateCompany(company: Company): Observable<Company> {
     return this.httpClient.put<Company>(`${this.API_BASE}/company/${company.id}`, company,
     { headers: new HttpHeaders().set('content-type', 'application/json') }
-  ).pipe(catchError(e => this.errorHandling(e)));
+  ).pipe(catchError(e => this.errorHandling<Company>(e)));
   }
 
-  errorHandling(error: Error): Observable<any> {
+  errorHandling<T>(error: Error): Observable<T> {
     // TODO: Implement proper error handler (Toaster...)
     console.error('ERROR', error);
 
-    return new Observable();
+    return new Observable<T>();
   }
 }
