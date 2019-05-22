@@ -20,7 +20,7 @@ export class CompanyListComponent implements OnInit {
     this.companies$ = this.getCompanies();
   }
 
-  deleteCompany(company: Company){
+  deleteCompany(company: Company) {
     let a$: Observable<Company> = this.companySvc.deleteCompany(company);
 
     a$.subscribe(c => {
