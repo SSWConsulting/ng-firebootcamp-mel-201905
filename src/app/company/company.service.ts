@@ -54,6 +54,7 @@ export class CompanyService {
   ).pipe(catchError(e => this.errorHandling<Company>(e)));
   }
 
+  //TODO : rename to errorHandlER
   errorHandling<T>(error: Error): Observable<T> {
     // TODO: Implement proper error handler (Toaster...)
     console.error('ERROR', error);
