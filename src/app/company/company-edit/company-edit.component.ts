@@ -25,6 +25,13 @@ export class CompanyEditComponent implements OnInit {
   ngOnInit() {
     this.isNewCompany = !this.activatedRoute.snapshot.params['id'];
     this.buildForm();
+
+    if(!this.isNewCompany){
+      this.companyId = this.activatedRoute.snapshot.params['id'];
+
+      this.companyService.getCompany(this.companyId)
+      .subscribe(company => this.companyForm.patchValue(company));
+    }
   }
 
 buildForm() {
@@ -39,6 +46,10 @@ saveCompany() {
   console.log('SAVING FORM', this.companyForm);
   if (this.isNewCompany) {
     this.companyService.addCompany(this.companyForm.value)
+    .subscribe(c => this.router.navigateByUrl('/company/list'));
+  } else {
+    const company: Company = {... this.companyForm.value, id: this.companyId };
+    this.companyService.updateCompany(company)
     .subscribe(c => this.router.navigateByUrl('/company/list'));
   }
 }
